@@ -107,6 +107,9 @@ server<- function(input, output) {
   })
 }
 
+App deployed:
+https://vharo00.shinyapps.io/DATA608week3V2/
+
 shinyApp(ui = ui, server = server)
 
 deployApp()
