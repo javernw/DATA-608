@@ -3,6 +3,7 @@ title: "DATA 608 Week 3"
 author: "Vinicio Haro"
 date: "March 8, 2019"
 output: html_document
+runtime: shiny
 ---
 
 ```{r message=FALSE, warning=FALSE}
