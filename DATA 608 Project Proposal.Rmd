@@ -1,0 +1,28 @@
+---
+title: "DATA 608 Project Proposal"
+author: "Vinicio Haro"
+date: "4/7/2019"
+output: html_document
+---
+
+For my final project, I want to continue on something that I had done in a previous course. I believe this project tackles on a major socio-economic issue that affects everyone living in NYC. I grew up in NYC neighborhood that would be considered to be low income. This neighborhood was saturated with fast food restaurants and one poorly kept supermarket. Someone needed to travel far for healthier food options. There have been several studies depicting the connection between income and obesity for a specific neighborhood.  
+
+I want to visually show the relationship between neighborhoods in NYC that have been histroically low income and number of obesity instances. I want to perhaps use shiny in combination with a formal report format. I want to show the distribution of obesity and poverty by neighborhood. Most of the data is at the zip code level, so zip codes will need to be collected into neighborhood and into boroname. I want to show a graph with the obesity rate and income level together. 
+
+The data will come from various sources: 
+The census API provides socio-economic data by region 
+https://cran.r-project.org/web/packages/censusapi/vignettes/getting-started.html
+
+Poverty rates by Neighborhood in NYC:
+http://a816-dohbesp.nyc.gov/IndicatorPublic/VisualizationData.aspx?id=103,4466a0,109,Summarize
+
+Adult Obesity Rate:
+http://a816-dohbesp.nyc.gov/IndicatorPublic/VisualizationData.aspx?id=2063,4466a0,113,Summarize
+
+CDC Obesity Rate:
+https://nccd.cdc.gov/dnpao_dtm/rdPage.aspx?rdReport=DNPAO_DTM.ExploreByLocation&rdRequestForwarding=Form
+
+Tax return Data by zipcode:
+https://catalog.data.gov/dataset/zip-code-data
+
+I will determine what data to use and not to use as I start out the project. There may be more data added as the project continues since this is something I will be researching daily. 
