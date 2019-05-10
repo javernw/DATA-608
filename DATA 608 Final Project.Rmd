@@ -1,0 +1,104 @@
+---
+title: "DATA 608 Final Project"
+author: "Vinicio Haro"
+date: "May 7, 2019"
+output: html_document
+---
+
+This document is to put together an outline and explore some of the potential data sources for the final DATA 608 project. 
+
+The goal is to visually explore the relationship between low income neighborhoods and poverty within New York City. I want to be able to visually show these elements using a combination of tatic plots and and shiny apps.
+
+NYC.gov has a very handy export tool that allows us to easily extract the data we need. We will pull poverty data by neighborhood and obesity data by boro. Povery data will need to be rolled up in order to match up with the obesity data since they are both two different types of granularity. 
+
+http://a816-dohbesp.nyc.gov/IndicatorPublic/VisualizationData.aspx?id=103,4466a0,109,Summarize
+
+http://a816-dohbesp.nyc.gov/IndicatorPublic/VisualizationData.aspx?id=2063,4466a0,113,Summarize
+
+This data will be stored in github and pulled directly from github. 
+```{r message=FALSE, warning=FALSE, include=FALSE}
+library("tmap")
+library("tmaptools")
+library("sf")
+library("leaflet")
+library(ggplot2)
+library(sp)
+library(maps)
+```
+
+
+## Read in the data sources
+```{r message=FALSE, warning=FALSE}
+library(readr)
+poverty.df <- read_csv("https://raw.githubusercontent.com/vindication09/DATA-608/master/Poverty%20(2).csv")
+
+obesity.df <- read_csv("https://raw.githubusercontent.com/vindication09/DATA-608/master/Obese%20Adults%20(2).csv")
+
+national<-read_csv("https://raw.githubusercontent.com/vindication09/DATA-608/master/National_Obesity_By_State.csv")
+
+income<-read_csv("https://raw.githubusercontent.com/vindication09/DATA-608/master/2015incomenew.csv")
+
+head(poverty.df);head(obesity.df);head(national.df);head(income)
+```
+
+Lets examine poverty on the national level
+```{r message=FALSE, warning=FALSE}
+library(usmap)
+library(ggplot2)
+library(ggrepel)
+library(sqldf)
+
+nationalb<-sqldf("select 
+                 Name as 'state',
+Obesity
+from national")
+
+usmap::plot_usmap(regions = "counties") + 
+  labs(title = "US Counties", subtitle = "This is a blank map of the counties of the United States.") + 
+  theme(panel.background = element_rect(colour = "black", fill = "lightblue"))
+
+summary(nationalb)
+```
+
+##Mapping the Obesity Rate in 2015
+
+```{r warning=FALSE, message=FALSE}
+
+
+usmap::plot_usmap(data = nationalb, values = "Obesity", lines = "black") + 
+  scale_fill_continuous(name = "Percent",low = "white", high = "red", label = scales::comma) + 
+  theme(legend.position = "right")+ 
+  labs(title = "United States Obesity Distribution", subtitle = "The percent of the state population that is considered obese from the 2015 CDC BRFSS Survey.")
+```
+
+source: http://data-lakecountyil.opendata.arcgis.com/datasets/3e0c1eb04e5c48b3be9040b0589d3ccf_8
+
+## Mapping the Household income by State for (2015)
+```{r r warning=FALSE, message=FALSE}
+incomeb<-sqldf("select 
+              State as state, 
+               income
+               from income")
+
+
+usmap::plot_usmap(data = incomeb, values = "income", lines = "red") + 
+  scale_fill_continuous(name = "Percent",low = "white", high = "green", label = scales::comma) + 
+  theme(legend.position = "right")+ 
+  labs(title = "United States Median Household Income", subtitle = "2015 Census")
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
