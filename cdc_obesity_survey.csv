@@ -155,7 +155,7 @@ year,state,Data_Value,Low_Confidence_Limit,High_Confidence_Limit,Sample_Size
 2015,West Virginia,30.7,29,32.4,5755
 2015,Wisconsin,29,27,31.1,5010
 2015,Wyoming,31.6,28.2,35.1,1588
-2014,National,28.9,28.6,29.2,425875
+2014,United States ,28.9,28.6,29.2,425875
 2014,Alabama,33.5,32.1,35,8190
 2014,Alaska,29.7,27.8,31.7,4142
 2014,Arizona,28.9,27.7,30.2,13849
@@ -207,7 +207,7 @@ year,state,Data_Value,Low_Confidence_Limit,High_Confidence_Limit,Sample_Size
 2014,West Virginia,35.7,34.2,37.2,5846
 2014,Wisconsin,31.2,29.6,32.8,6655
 2014,Wyoming,29.5,27.5,31.5,5973
-2013,National,28.3,28,28.6,457487
+2013,United States ,28.3,28,28.6,457487
 2013,Alabama,32.4,30.8,34.1,6244
 2013,Alaska,28.4,26.5,30.4,4396
 2013,Arizona,26.8,24.3,29.4,4029
