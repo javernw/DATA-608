@@ -1,0 +1,157 @@
+---
+title: "DATA 608 Final Project"
+author: "Vinicio Haro"
+date: "5/13/2019"
+output: html_document
+runtime: shiny
+---
+
+# Obesity vs Household Income
+
+##Background 
+When it comes to Obesity in America, what factors contribute to rising Obesity rates? Various studies done across several disciplines cite factors such as household income, race, genetics, and industry as factors. For our purposes, we are going to visualize the relationship between Household Income and Obesity. We are not performing statistical analysis or modeling. 
+
+In order to get the whole picture, I want to examine a snapshot of household income and obesity across the nation. This will be followed up by a look at how the obesity rates and median HHI’s changed over time.  After analyzing the results, we will take a deeper dive into how things look in New York City as. 
+
+This project will showcase visualizing concepts ranging from static images to shiny apps in addition to scaling down data at the national level to the county level. 
+
+##The Data 
+In order to scale the data down from National level to County level, we pull data from various sources listed below: 
+
+* [United States Census] (https://www.census.gov/topics/income-poverty/income.html)
+
+* [United States CDC] (https://chronicdata.cdc.gov/Nutrition-Physical-Activity-and-Obesity/Nutrition-Physical-Activity-and-Obesity-Behavioral/hn4x-zwk7)
+
+#R Packages Used 
+```{r message=FALSE, warning=FALSE}
+library("tmap")
+library("tmaptools")
+library("sf")
+library("leaflet")
+library(ggplot2)
+library(sp)
+library(maps)
+library(readr)
+library(usmap)
+library(ggplot2)
+library(ggrepel)
+library(sqldf)
+library(shiny)
+library(plotly)
+```
+
+# Bringing in the Data 
+In order to keep this assignment as reproducible as possible, the data will be read from Github. 
+
+```{r message=FALSE, warning=FALSE}
+
+poverty.df <- read_csv("https://raw.githubusercontent.com/vindication09/DATA-608/master/Poverty%20(2).csv")
+
+obesity.df <- read_csv("https://raw.githubusercontent.com/vindication09/DATA-608/master/Obese%20Adults%20(2).csv")
+
+national<-read_csv("https://raw.githubusercontent.com/vindication09/DATA-608/master/National_Obesity_By_State.csv")
+
+income<-read_csv("https://raw.githubusercontent.com/vindication09/DATA-608/master/2015incomenew.csv")
+
+state_income<-read_csv("https://raw.githubusercontent.com/vindication09/DATA-608/master/statelevel_medianincome.csv")
+
+state_obesity<-read_csv("https://raw.githubusercontent.com/vindication09/DATA-608/master/cdc_obesity_survey.csv")
+
+#head(poverty.df);head(obesity.df);head(national);head(income);head(state_income);head(state_obesity)
+```
+
+#EDA
+In order to get an idea of what the landscape of poverty and obesity looks like across the nation, we can generate a heatmap for each attribute. We are looking at data pertaining to adults 18 and over. 
+
+```{r warning=FALSE, message=FALSE}
+nationalb<-sqldf("select 
+                 Name as 'state',
+Obesity
+from national")
+
+usmap::plot_usmap(data = nationalb, values = "Obesity", lines = "black") + 
+  scale_fill_continuous(name = "Percent",low = "white", high = "red", label = scales::comma) + 
+  theme(legend.position = "right")+ 
+  labs(title = "United States Obesity Distribution", subtitle = "Percent of Population classified Obese per State ~ 2015 CDC BRFSS Survey.")
+```
+
+
+
+```{r r warning=FALSE, message=FALSE}
+incomeb<-sqldf("select 
+              State as state, 
+               income
+               from income")
+
+
+usmap::plot_usmap(data = incomeb, values = "income", lines = "red") + 
+  scale_fill_continuous(name = "HHI",low = "white", high = "green", label = scales::comma) + 
+  theme(legend.position = "right")+ 
+  labs(title = "United States Median Household Income", subtitle = "2015 Census")
+```
+
+---to be continued 
+add bar charts side by side of income and obesity 
+
+# Change Over Time 
+
+```{r warning=FALSE, message=FALSE}
+#extract the state level data 
+stateonly_income<-sqldf("select 
+                    * 
+                    from state_income 
+                    where state not in ('United States')")
+
+national_income<-sqldf("select
+                       *
+                       from state_income
+                       where state='United States'")
+
+#bring these two data sources together 
+joina<-sqldf("select 
+             a.year, 
+             a.state,
+             a.income,
+             b.income as national_avg_income
+             from stateonly_income a
+             join national_income b 
+             on (a.year=b.year)")
+```
+
+##Shiny Household income per state vs national over time 
+```{r warning=FALSE, message=FALSE}
+library(shiny)
+library(plotly)
+
+ui <- fluidPage(
+  sidebarPanel(
+    selectInput(inputId = "state", label = "State Selected:",
+                choices = levels(as.factor(joina$state))
+    ),
+ 
+    helpText("Median Household Income per State vs National Median Household Income"),
+    width = "auto"
+  ),
+  plotOutput("plot2")
+)
+
+server<- function(input, output) {
+  
+  output$plot2 <-renderPlot({
+    
+    SelectedState <- input$state
+    
+    ggplot(joina[joina$state == SelectedState,]) +
+      geom_bar(aes(x = year, weight = income), fill = "steelblue") +
+      labs(x="Year", y = "Median Household Income", 
+           title = "U.S Median Household Income",
+           subtitle = paste("U.S Census 2013-2017")) +
+      geom_line(aes(x = year, y = national_avg_income, linetype = "National Median HHI"), col = "red", lwd = 1) +
+      scale_linetype(name = NULL) +
+      theme_bw()
+  })
+}
+
+shinyApp(ui = ui, server = server)
+
+```
