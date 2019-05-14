@@ -77,7 +77,7 @@ usmap::plot_usmap(data = nationalb, values = "Obesity", lines = "black") +
 
 
 
-```{r r warning=FALSE, message=FALSE}
+```{r warning=FALSE, message=FALSE}
 incomeb<-sqldf("select 
               State as state, 
                income
