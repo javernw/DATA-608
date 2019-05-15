@@ -16,7 +16,7 @@ In order to get the whole picture, I want to examine a snapshot of household inc
 This project will showcase visualizing concepts ranging from static images to shiny apps in addition to scaling down data at the national level to the county level. 
 
 ##The Data 
-In order to scale the data down from National level to County level, we pull data from various sources listed below: 
+we pull data from various sources listed below: 
 
 * [United States Census] (https://www.census.gov/topics/income-poverty/income.html)
 
@@ -108,8 +108,10 @@ usmap::plot_usmap(data = incomeb, values = "income", lines = "red") +
 According to the Median Household income map, Alaska and New York are states that report higher median houshold incomes. States such as Alabama and Louisiana have the lowest median household income. We can use a by the numbers approach to get the exact states where the median income is the lowest in addition to the states that have the highest percentage of adults classified as obese. 
 
 ```{r warning=FALSE, message=FALSE}
-incomec<-sqldf("select * from incomeb order by income asc limit 5")
-nationalc<-sqldf("select * from nationalb order by obesity desc limit 5")
+incomec<-sqldf("select * from incomeb order by income asc limit 10")
+nationalc<-sqldf("select * from nationalb order by obesity desc limit 10")
+incomed<-sqldf("select * from incomeb order by income desc limit 10")
+nationald<-sqldf("select * from nationalb order by obesity asc limit 10")
 
 join2015<-sqldf("select
                 a.state,
@@ -129,7 +131,7 @@ ggplot(incomec, aes(x=reorder(state,income),round(income, digits=2)))+
   labs( x="State", y="Median Household Income")+
   coord_flip()+
   labs(caption="2015 U.S Census")+  
-  ggtitle("Top 5 States by Median Household Income");
+  ggtitle("Bottom 10 States by Median Household Income");
 
 ggplot(nationalc, aes(x=reorder(state,Obesity),round(Obesity, digits=2)))+ 
   geom_bar(stat="identity", fill="deepskyblue3")+
@@ -141,11 +143,38 @@ ggplot(nationalc, aes(x=reorder(state,Obesity),round(Obesity, digits=2)))+
   labs( x="State", y="Percent of Adults Classified as Obese")+
   coord_flip()+
   labs(caption="2015 CDC Survey")+  
-  ggtitle("Top 5 States by Percent of Adults Classified as Obese");
+  ggtitle("Top 10 States by Percent of Adults Classified as Obese");
+
+ggplot(incomed, aes(x=reorder(state,income),round(income, digits=2)))+ 
+  geom_bar(stat="identity", fill="deepskyblue3")+
+  geom_text(aes(label=round(income, digits=2)), vjust=0.5, size=5, position=position_dodge(width = 1), hjust=1.5)+
+  theme_minimal()+
+  theme(axis.text.x=element_text(size=12, vjust=0.5))+
+  theme(axis.text.y=element_text(size=12, vjust=0.5))+
+  theme(plot.title = element_text(size=12))+
+  labs( x="State", y="Median Household Income")+
+  coord_flip()+
+  labs(caption="2015 U.S Census")+  
+  ggtitle("Top 10 States by Median Household Income")
+
+ggplot(nationald, aes(x=reorder(state,Obesity),round(Obesity, digits=2)))+ 
+  geom_bar(stat="identity", fill="deepskyblue3")+
+  geom_text(aes(label=round(Obesity, digits=2)), vjust=0.5, size=5, position=position_dodge(width = 1), hjust=1.5)+
+  theme_minimal()+
+  theme(axis.text.x=element_text(size=12, vjust=0.5))+
+  theme(axis.text.y=element_text(size=12, vjust=0.5))+
+  theme(plot.title = element_text(size=12))+
+  labs( x="State", y="Percent of Adults Classified as Obese")+
+  coord_flip()+
+  labs(caption="2015 CDC Survey")+  
+  ggtitle("Bottom 10 States by Percent of Adults Classified as Obese");
+
 
 ```
 
 The bar charts confirm that there exists overlap between States that have the lowest median household income and states that have the highest percentage of adults classified as Obese such as Missisippi. I want to examine how a state such as Mississippi compares to the National averages for Obesity and Income overtime. We utilize a shiny approach to view the time series for the state of our choice. 
+
+On the flip side, we see some overlap between higher median household income regions such as Colorado and DC with the lowest percentage of adults classified as obese. I would also use this result to make the case that there are additional factors outside of household income that affect the obesity race on both ends of the obesity spectrum. 
 
 # Change Over Time 
 As of now, we have observed the median household income ad obesity rates in a 2015 snapshot. In order to get a better idea of the overall landscape, we can examine the change of obesity rates and median household incomes over time. 
@@ -310,5 +339,5 @@ ggplot(data = joinc, aes(x = state_value, y = income)) +
 
 Across 2013-2017, we can see there exists evidence of a strong linear relationship between Median Household income and percentage of adults classified as obese. Across all 5 years, the lower the median household income,the higher the percentage of adults classified as obese. We also add a 95 percent confidence interval to our best fitting line. 2015 still seems odd due to the fact that there is not so much of a linear trend compared to the other years. I would recommed investigate outliers or additional factors such as race or education. 
 
-As a case study, we can focus on a single state to see an even more granular look at the data. As a proof of concept, we will look into New York which happens to be my state. 
+
 
