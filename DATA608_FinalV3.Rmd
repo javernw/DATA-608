@@ -13,7 +13,7 @@ When it comes to Obesity in America, what factors contribute to rising Obesity r
 
 In order to get the whole picture, I want to examine a snapshot of household income and obesity across the nation. This will be followed up by a look at how the obesity rates and median HHI’s changed over time.  After analyzing the results, we will take a deeper dive into how things look in New York City as. 
 
-This project will showcase visualizing concepts ranging from static images to shiny apps in addition to scaling down data at the national level to the county level. 
+This project will showcase visualizing concepts ranging from static images to shiny apps. 
 
 ##The Data 
 we pull data from various sources listed below: 
@@ -22,7 +22,7 @@ we pull data from various sources listed below:
 
 * [United States CDC] (https://chronicdata.cdc.gov/Nutrition-Physical-Activity-and-Obesity/Nutrition-Physical-Activity-and-Obesity-Behavioral/hn4x-zwk7)
 
-* [NYC Department of Environment] (http://a816-dohbesp.nyc.gov/IndicatorPublic/VisualizationData.aspx?id=2063,4466a0,113,Summarize)
+
 
 ##R Packages Used 
 ```{r message=FALSE, warning=FALSE}
